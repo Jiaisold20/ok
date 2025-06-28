@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mental Health Check-in</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gigi&family=Merriweather&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Times New Roman', serif;
+      background-color: #fbd4d4;
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .page {
+      display: none;
+      padding: 40px 20px;
+    }
+
+    #intro {
+      display: block;
+      font-size: 3.5em;
+      margin-top: 25vh;
+      position: relative;
+      font-weight: bold;
+    }
+
+    #coffee-cup-start {
+      position: relative;
+      margin-top: 30px;
+      animation: floatUp 2s infinite ease-in-out;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    #home {
+      font-family: 'Merriweather', serif;
+    }
+
+    #result {
+      font-family: 'Gigi', cursive;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-top: 40px;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .section {
+      margin: 30px 0;
+    }
+
+    .textbox {
+      background-color: #d2b48c;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 400px;
+      font-size: 1em;
+    }
+
+    .emoji-buttons button {
+      font-size: 2em;
+      background: none;
+      border: none;
+      margin: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .emoji-buttons button.animate {
+      animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+
+    #coffee-cup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      opacity: 0.7;
+      display: none;
+      z-index: 10;
+    }
+
+    #result {
+      background-color: #fbd4d4 !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .quote {
+      font-size: 2.5em;
+      font-weight: bold;
+      text-align: center;
+      padding: 30px;
+      background-color: rgba(255, 255, 255, 0.4);
+      color: #f9eaea;
+      border-radius: 20px;
+      text-shadow: 2px 2px 4px #00000066;
+      max-width: 90%;
+      z-index: 1;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: pink;
+      transform: rotate(45deg);
+      animation: float 5s linear infinite;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: pink;
+      border-radius: 50%;
+    }
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    button.finish-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #d2b48c;
+      color: #fff;
+      font-size: 1em;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Intro Page -->
+  <div id="intro" class="page">
+    <div>are you okay?</div>
+    <img id="coffee-cup-start" src="https://i.imgur.com/4JMj3w9.gif" alt="Coffee Cup" width="120">
+  </div>
+
+  <!-- Home Page -->
+  <div id="home" class="page">
+    <h1>Check-in</h1>
+    <div class="section">
+      <h2>How do you feel today?</h2>
+      <div class="emoji-buttons">
+        <button onclick="animateEmoji(this)">😊</button>
+        <button onclick="animateEmoji(this)">😐</button>
+        <button onclick="animateEmoji(this)">😢</button>
+        <button onclick="animateEmoji(this)">😫</button>
+        <button onclick="animateEmoji(this)">😡</button>
+      </div>
+    </div>
+    <div class="section">
+      <h2>Rate your day (1–10)</h2>
+      <input type="number" min="1" max="10" class="textbox">
+    </div>
+    <div class="section">
+      <h2>Describe your state in 3 words</h2>
+      <input id="threeWords" class="textbox" type="text" placeholder="e.g. tired, lost, anxious">
+      <br><br>
+      <button class="finish-btn" onclick="showResult()">Finish Check-in</button>
+    </div>
+  </div>
+
+  <!-- Result Page -->
+  <div id="result" class="page">
+    <div class="quote" id="quoteText"></div>
+  </div>
+
+  <img id="coffee-cup" src="https://i.imgur.com/hKcF6QE.png" alt="Coffee Cup" width="120">
+
+  <script>
+    function animateEmoji(btn) {
+      btn.classList.add('animate');
+      setTimeout(() => {
+        btn.classList.remove('animate');
+      }, 400);
+    }
+
+    function showResult() {
+      const input = document.getElementById("threeWords").value.toLowerCase();
+      const quoteText = document.getElementById("quoteText");
+
+      if (input.includes("happy")) {
+        quoteText.innerText = "AS IT SHOULD BE! LOVE YOU! GOD BLESS YOUR SMILE";
+      } else if (
+        input.includes("tired") ||
+        input.includes("exhausted") ||
+        input.includes("confused") ||
+        input.includes("sad")
+      ) {
+        quoteText.innerText = "it's okay, you are doing your best, i love you, take it easy";
+      } else {
+        quoteText.innerText = "thank you for checking in <3";
+      }
+
+      document.getElementById("home").style.display = "none";
+      document.getElementById("result").style.display = "flex";
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.top = "100vh";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 5000);
+    }
+
+    setTimeout(() => {
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("home").style.display = "block";
+      setInterval(() => createHeart(), 300);
+    }, 4000);
+  </script>
+</body>
+</html>
